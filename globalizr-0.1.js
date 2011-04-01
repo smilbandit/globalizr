@@ -1,21 +1,54 @@
 window.Globalizr = (function(window,document,undefined){
-   docElement = document.documentElement;
-   classes = [];
-   lang = '';
-   var version = '0.1';
-   ret = {};
-   var d = document.domain.split('.');
-   var l = d.length-1;
-   var s = 0;
-   classes.push(d[l]);
-   var language = window.navigator.userLanguage || window.navigator.language;
-   classes.push(language);
-   if ('in,id,il,uk,nz,jp,kr,ck'.indexOf(d[l])>0){ s = -1; classes.push(d[l-1]); }
-   if ((l+s) > 1) { classes.push(d[d.length-2+s]); }
-   if ((l+s) > 1) { classes.push(d[d.length-3+s]); } else { classes.push('no-host'); }
-   if (document.defaultCharset!=undefined) { classes.push(document.defaultCharset); } else { classes.push('no-defaultcharset'); }
-   if (document.charset!=undefined) { classes.push(document.charset); } else { classes.push('no-charset'); }
-   if (document.inputEncoding!=undefined) { classes.push(document.inputEncoding); } else { classes.push('no-inputencoding'); }
-   docElement.className += classes.join(' ');
+  
+   var docElement = document.documentElement,
+       classes = [],
+       version = '0.1',
+       ret = {},
+       domain = document.domain.split('.'),
+       domainLength = domain.length-1,
+       ccSLD = 0,
+       lang = window.navigator.userLanguage || window.navigator.language,
+       charset = document.defaultCharset || document.charset || document.inputEncoding; 
+       
+   // Start the domain related code
+   if (domainLength > -1) {
+      classes.push(domain[domainLength]);
+      
+      // Check if this is a ccTLD uses a country code second level domain
+      if ('in,id,il,uk,nz,jp,kr,ck'.indexOf(domain[domainLength]) > 0) { 
+         ccSLD = -1; 
+         // push the ccSLD
+         classes.push(domain[domainLength-1]); 
+      }
+
+      // get ccSLD or Domain name
+      if ((domainLength+ccSLD) > 0) { 
+         classes.push(domain[domainLength-1+ccSLD]); 
+      } else { 
+         classes.push('no-domain');  // should only fire for localhost
+      }
+
+      // get Host if there isn't a ccSLD or SLD if there is
+      if ((domainLength+ccSLD) > 1) { 
+         classes.push(domain[domainLength-2+ccSLD]); 
+      } else { 
+         if (ccSLD = 0) { classes.push('no-host') }; 
+      }
+
+      // get Host if this ccTLD uses ccSLD's
+      if ((domainLength+ccSLD) > 2) { 
+         classes.push(domain[domainLength-3+ccSLD]); 
+      } else { 
+         if (ccSLD != 0) { classes.push('no-host'); }
+      }
+   } else {
+      classes.push('no-tld no-domain no-host');  // should only fire when viewing via filesystem
+   }
+   
+   classes.push(lang);
+   classes.push(charset);
+   
+   docElement.className += ' ' + classes.join(' ');
    return ret;
+   
 })(this,this.document);
