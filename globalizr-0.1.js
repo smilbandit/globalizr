@@ -32,24 +32,23 @@ window.Globalizr = (function(window,document,undefined){
       // get Host if there isn't a ccSLD or SLD if there is
       if ((domainLength+ccSLD) > 1) { 
          classes.push(domain[domainLength-2+ccSLD]); 
-      } else { 
-         if (ccSLD = 0) { classes.push('no-host') }; 
+      } else if (ccSLD == 0) { 
+        classes.push('no-host'); 
       }
 
       // get Host if this ccTLD uses ccSLD's
       if ((domainLength+ccSLD) > 2) { 
          classes.push(domain[domainLength-3+ccSLD]); 
-      } else { 
-         if (ccSLD != 0) { classes.push('no-host'); }
+      } else if (ccSLD != 0) { 
+        classes.push('no-host');
       }
    } else {
       classes.push('no-tld no-domain no-host');  // should only fire when viewing via filesystem
    }
    
-   classes.push(lang);
-   classes.push(charset);
+   classes.push(lang, charset);
    
    docElement.className += ' ' + classes.join(' ');
    return ret;
    
-})(this,this.document);
+})(this, this.document);
