@@ -1,17 +1,18 @@
 window.Globalizr = (function(window,document,undefined){
   
-   var docElement = document.documentElement,
-       classes = [],
-       version = '0.1',
-       ret = {},
-       domain = document.domain.split('.'),
-       domainLength = domain.length-1,
-       ccSLD = 0,
-       lang = window.navigator.userLanguage || window.navigator.language,
-       charset = document.defaultCharset || document.charset || document.inputEncoding; 
+   var docElement   = document.documentElement,
+       classes      = [],
+       version      = '0.2',
+       ret          = {},
+       domain       = document.domain.split('.'),
+       domainLength = domain.length - 1,
+       ccSLD        = 0,
+       lang         = navigator.userLanguage || navigator.language,
+       charset      = document.defaultCharset || document.charset || document.inputEncoding; 
        
    // Start the domain related code
    if (domainLength > -1) {
+     
       classes.push(domain[domainLength]);
       
       // Check if this is a ccTLD uses a country code second level domain
